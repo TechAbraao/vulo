@@ -1,4 +1,5 @@
 from src.vulo.configs import Configs
+from src.vulo.db import Base, engine
 from src.vulo.http import (api, web)
 from fastapi import FastAPI, APIRouter
 import logging
@@ -10,31 +11,39 @@ def create_app(configs: Configs | None) -> FastAPI:
     _configs: Configs = configs or Configs()
     logger.info(f"Application version: {_configs.version}")
 
-    modes_allowed = ["dev", "test", "prod"]
+    app = FastAPI(title=_configs.title, version=_configs.version, description=_configs.description)
+
+    modes_allowed = ["dev", "prod", "test"]
     if _configs.app_mode == modes_allowed[0]:
         logger.info(f"Application mode: {modes_allowed[0]}")
-        pass
 
+        from src.vulo.models import Clients, Containers
+        @app.on_event("startup")
+        def create_db():
+            logger.info(f"Creating a database and registering the tables")
+            Base.metadata.create_all(bind=engine)
+        
     if _configs.app_mode == modes_allowed[1]:
         logger.info(f"Application mode: {modes_allowed[1]}")
-        pass
+        
+        from src.vulo.models import Clients, Containers
+        @app.on_event("startup")
+        def create_db():
+            logger.info(f"Creating a database and registering the tables")
+            Base.metadata.create_all(bind=engine)
 
     if _configs.app_mode == modes_allowed[2]:
         logger.info(f"Application mode: {modes_allowed[2]}")
         pass
+
     logger.info(f"Application description: {_configs.description}")
 
     if not _configs.app_mode in modes_allowed:
         exit("\n * Select an application startup mode. These are: dev, test, or prod.\n")
 
-    app = FastAPI(
-                title=_configs.title, 
-                version=_configs.version, 
-                description=_configs.description
-        )
-    
     routes = [api, web]
     for route in routes:
+        logger.info(f"Include router (recording route): {route}")
         app.include_router(route)
 
     logger.info(f"The server initialized successfully. ;)")
