@@ -13,3 +13,6 @@ class Clients(Base):
 class Containers(Base):
     __tablename__ = "containers"
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+
+class Tokens():
+    pass

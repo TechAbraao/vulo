@@ -10,6 +10,16 @@ class Configs():
     _description: str = field(default="A lightweight PaaS for your home server", init=False)
     _version: str = field(default="1.0.0", init=False)
     _database_dev: str = field(default="sqlite:///./src/vulo/db/vulo-dev.db", init=False)
+    _maintainers: list[dict] = field(default_factory=lambda: [
+    {
+        "name": "Abraão Santos",
+        "github": "github.com/Mattera-dev"
+    }, 
+    {
+        "name": "Vinicius Mattera",
+        "github": "github.com/TechAbraao"
+    }
+], init=False)
 
     app_mode: str = os.getenv("APP_MODE", "dev")
     app_host: str = os.getenv("APP_HOST", None)
@@ -32,3 +42,7 @@ class Configs():
     @property
     def database_dev(self) -> str:
         return self._database_dev
+    
+    @property
+    def maintainers(self) -> list[dict]:
+        return self._maintainers
