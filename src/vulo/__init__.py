@@ -43,7 +43,7 @@ def create_app(configs: Configs | None) -> FastAPI:
 
     routes = [api, web]
     for route in routes:
-        logger.info(f"Include router (recording route): {route}")
+        logger.info(f"Include router (recording routes): {route}")
         app.include_router(route)
 
     logger.info(f"The server initialized successfully. ;)")

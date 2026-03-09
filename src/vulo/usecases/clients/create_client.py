@@ -12,7 +12,7 @@ class CreateClientUseCase:
     def _hash_secret_key(self, secret_key: str) -> str:
         return hashlib.sha256(secret_key.encode()).hexdigest()
 
-    async def execute(self, name: str):
+    async def execute(self, name: str, roles: str = None):
 
         exists = await self.repo.exists_by_name(name)
         if exists:

@@ -32,3 +32,14 @@ class ClientRepository:
 
     async def find_all_by_id(self, id: str):
         pass
+
+    async def delete_by_id(self, id: str) -> bool:
+        client = self.db.query(Clients).filter(Clients.id == id).first()
+
+        if not client:
+            return False
+
+        self.db.delete(client)
+        self.db.commit()
+        return True
+    

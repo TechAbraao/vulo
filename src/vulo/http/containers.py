@@ -19,6 +19,6 @@ async def get_by_id_containers(id: str):
 async def put_containers():
     pass
 
-@api.delete("/containers", tags=["Containers"])
+@api.delete("/containers/{id}", tags=["Containers"])
 async def delete_containers():
     pass

@@ -4,7 +4,7 @@ class ClientByIdUseCase():
     def __init__(self, repo):
         self.repo = repo
 
-    async def execute(self, id: str):
+    async def execute(self, id: str, roles: str = None):
         
         client = await self.repo.find_by_id(id)
         if not client:

@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "name": "FastAPI Debug",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",              
+            "args": ["src.vulo.app:app", "--reload", "--host", "127.0.0.1", "--port", "5000"],  
+            "jinja": true
+        }
+    ]
+}
