@@ -1,4 +1,8 @@
 from src.vulo.models import Clients
+import logging
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logger = logging.getLogger(__name__)
 
 class ClientRepository:
     def __init__(self, db):
@@ -42,4 +46,3 @@ class ClientRepository:
         self.db.delete(client)
         self.db.commit()
         return True
-    

@@ -23,9 +23,7 @@ async def post_clients(
     return client
 
 @api.get("/clients", tags=["Clients"], status_code=status.HTTP_200_OK)
-async def get_clients(
-        db: Session = Depends(get_db), credentials = Depends(basic_auth)
-    ):
+async def get_clients(db: Session = Depends(get_db), credentials = Depends(basic_auth)):
     
     repo = ClientRepository(db)
     usecase = AllClientsUseCase(repo)
@@ -54,7 +52,8 @@ async def delete_clients(id: str, db: Session = Depends(get_db), credentials = D
     
     return None
 
-
+# TODO: Implementação futura
+#
 # @api.put("/clients", tags=["Clients"])
 # async def put_clients():
 #     pass
