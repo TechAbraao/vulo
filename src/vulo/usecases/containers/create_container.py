@@ -25,26 +25,31 @@ class CreateContainerUseCase:
             detach=True
         )
 
-    async def _container_exists(self, strategy: ContainerExistsStrategy, name: str) -> bool:
+    async def _containers_exists_with_strategy(self, strategy: ContainerExistsStrategy, name: str) -> bool:
         if strategy == ContainerExistsStrategy.DAEMON:
             try:
                 self.docker_client.containers.get(name)
                 return True, strategy
             except NotFound:
                 return False, strategy
-        if strategy == ContainerExistsStrategy.DATABASE:
+        elif strategy == ContainerExistsStrategy.DATABASE:
             exists_by_name = await self.repo.exists_by_name(name)
             if exists_by_name:
                 return True, strategy
             return False, strategy
-
+        else:
+            raise ValueError(f"Unknown strategy: '{strategy}'. Expected one of: {list(ContainerExistsStrategy)}")
+        
+    # 1. E o Rollback pra caso não consiga persistir no SQLite o Container?
     async def execute(self, req, roles: str = None):
 
         logger.info(f"Checking for the existence of the container '{req.name}'.")
-        container_exists, c_strategy = await self._container_exists(strategy=ContainerExistsStrategy.DATABASE, name=req.name)
+        container_exists, c_strategy = await self._containers_exists_with_strategy(
+                strategy=ContainerExistsStrategy.DATABASE, name=req.name
+            )
 
         if container_exists:
-            logger.warn(f"Container already exists. The strategy used was '{c_strategy.name}'.")
+            logger.warning(f"Container already exists. The strategy used was '{c_strategy.name}'.")
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT, detail=f"Container '{req.name}' already exists.")
 

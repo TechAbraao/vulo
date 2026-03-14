@@ -7,3 +7,7 @@ TEST = "test"
 class ContainerExistsStrategy(Enum):
     DAEMON = "daemon"
     DATABASE = "database"
+
+class ContainerStrategy(Enum):
+    DAEMON = "daemon"
+    DATABASE = "database"

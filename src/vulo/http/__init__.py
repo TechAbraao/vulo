@@ -1,8 +1,12 @@
 from src.vulo.configs import Configs
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 
 api = APIRouter(prefix="/api")
 web = APIRouter(prefix="")
+templates = Jinja2Templates(directory="src/vulo/web")
+
 
 @api.get("/system/health", tags=["System"])
 async def get_health_check():
@@ -12,12 +16,11 @@ async def get_health_check():
 async def get_system_infos():
     configs = Configs()
 
-    
     res = {
         "title": configs.title,
         "description": configs.description,
         "version": configs.version,
-        "maintainers": configs.maintainers
+        "maintainers": configs.maintainers,
     }
 
     return res
@@ -25,4 +28,5 @@ async def get_system_infos():
 from src.vulo.http.auth import *
 from src.vulo.http.containers import *
 from src.vulo.http.clients import *
-
+from src.vulo.http.users import *
+from src.vulo.http.dashboard import *

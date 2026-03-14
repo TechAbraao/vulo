@@ -1,4 +1,5 @@
 from src.vulo.db import SessionLocal
+import time
 import docker
 
 def get_db():
@@ -14,3 +15,8 @@ def get_docker():
         yield client
     finally:
         client.close()
+
+def get_timer():
+    timer = {"start": time.time(), "elapsed": None}
+    yield timer
+    timer["elapsed"] = time.time() - timer["start"]

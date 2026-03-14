@@ -1,6 +1,7 @@
 from src.vulo.configs import Configs
 from src.vulo.db import Base, engine
 from src.vulo.http import (api, web)
+from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI
 import logging
 
@@ -12,6 +13,7 @@ def create_app(configs: Configs | None) -> FastAPI:
     logger.info(f"Application version: {_configs.version}")
 
     app = FastAPI(title=_configs.title, version=_configs.version, description=_configs.description)
+    app.mount("/static", StaticFiles(directory="src/vulo/web/static"), name="static")
 
     modes_allowed = ["dev", "prod", "test"]
     if _configs.app_mode == modes_allowed[0]:
@@ -22,10 +24,10 @@ def create_app(configs: Configs | None) -> FastAPI:
         def create_db():
             logger.info(f"Creating a database and registering the tables")
             Base.metadata.create_all(bind=engine)
-        
+
     if _configs.app_mode == modes_allowed[1]:
         logger.info(f"Application mode: {modes_allowed[1]}")
-        
+
         from src.vulo.models import Clients, Containers, Users
         @app.on_event("startup")
         def create_db():
@@ -48,4 +50,3 @@ def create_app(configs: Configs | None) -> FastAPI:
 
     logger.info(f"The server initialized successfully. ;)")
     return app
-

@@ -22,7 +22,6 @@ class CreateClientUseCase:
         client_secret =  self._create_client(32)
         client_secret_hash = self._hash_secret_key(client_secret)
 
-
         client = await self.repo.create(
             name=name,
             client_id=client_id,

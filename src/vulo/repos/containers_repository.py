@@ -28,3 +28,7 @@ class ContainersRepository:
     async def exists_by_name(self, name: str):
         exists = self.db.query(Containers).filter(Containers.name == name).first()
         return exists is not None
+
+    async def find_by_id(self, id: str):
+        container = self.db.query(Containers).where(Containers.id == id).first()
+        return container
